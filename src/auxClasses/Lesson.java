@@ -1,14 +1,14 @@
-package dataClasses;
+package auxClasses;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Lesson
 {
     private Course hostedCourse;
     private Tutor hostingTutor;
     private ZonedDateTime hostingDateTime;
-    private ArrayList<Student> enrolledStudents;
+    private HashMap<String, Student> enrolledStudents;
     public Course getHostedCourse()
     {
         return hostedCourse;
@@ -33,11 +33,11 @@ public class Lesson
     {
         this.hostingDateTime = hostingDateTime;
     }
-    public ArrayList<Student> getEnrolledStudents()
+    public HashMap<String, Student> getEnrolledStudents()
     {
         return enrolledStudents;
     }
-    public void setEnrolledStudents(ArrayList<Student> enrolledStudents)
+    public void setEnrolledStudents(HashMap<String, Student> enrolledStudents)
     {
         this.enrolledStudents = enrolledStudents;
     }

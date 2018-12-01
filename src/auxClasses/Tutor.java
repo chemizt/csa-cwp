@@ -1,12 +1,12 @@
-package dataClasses;
+package auxClasses;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Tutor
 {
     private String firstName, middleName, lastName;
     private Company employingCompany;
-    private ArrayList<Course> hostedCoursesList;
+    private HashMap<String, Course> hostedCoursesList;
     public String getFirstName()
     {
         return firstName;
@@ -39,11 +39,11 @@ public class Tutor
     {
         this.employingCompany = employingCompany;
     }
-    public ArrayList<Course> getHostedCoursesList()
+    public HashMap<String, Course> getHostedCoursesList()
     {
         return hostedCoursesList;
     }
-    public void setHostedCoursesList(ArrayList<Course> hostedCoursesList)
+    public void setHostedCoursesList(HashMap<String, Course> hostedCoursesList)
     {
         this.hostedCoursesList = hostedCoursesList;
     }

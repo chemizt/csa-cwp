@@ -1,13 +1,13 @@
-package dataClasses;
+package auxClasses;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Company
 {
     private String name;
     private Address location;
-    private ArrayList<Course> hostedCourses;
-    private ArrayList<Tutor> employedTutors;
+    private HashMap<String, Course> hostedCourses;
+    private HashMap<String, Tutor> employedTutors;
     public String getName()
     {
         return name;
@@ -24,20 +24,29 @@ public class Company
     {
         this.location = location;
     }
-    public ArrayList<Course> getHostedCourses()
+    public HashMap<String, Course> getHostedCourses()
     {
         return hostedCourses;
     }
-    public void setHostedCourses(ArrayList<Course> hostedCourses)
+    public void setHostedCourses(HashMap<String, Course> hostedCourses)
     {
         this.hostedCourses = hostedCourses;
     }
-    public ArrayList<Tutor> getEmployedTutors()
+    public HashMap<String, Tutor> getEmployedTutors()
     {
         return employedTutors;
     }
-    public void setEmployedTutors(ArrayList<Tutor> employedTutors)
+    public void setEmployedTutors(HashMap<String, Tutor> employedTutors)
     {
         this.employedTutors = employedTutors;
+    }
+    public void parseCompanyInfoString(String strToParse)
+    {
+
+    }
+    public void parseAddressString(String strToParse)
+    {
+        location = new Address();
+
     }
 }

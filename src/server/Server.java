@@ -1,6 +1,6 @@
 package server;
 
-import dataClasses.Schedule;
+import auxClasses.Schedule;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -11,22 +11,22 @@ public class Server
     private void init()
     {
         coursesSchedule = new Schedule();
-        boolean fileParsedSuccessfully = false;
+        boolean filesParsedSuccessfully = false;
         do
         {
-            System.out.print("Введите называние файла-источника: ");
+            System.out.print("Введите путь к папке с исходными файлами (нажмите Enter, если они находятся в одной папке с исполняемым файлом сервера): ");
             Scanner input = new Scanner(System.in);
             try
             {
-                coursesSchedule.parseFile(input.nextLine());
-                fileParsedSuccessfully = true;
+                coursesSchedule.parseFiles(input.nextLine());
+                filesParsedSuccessfully = true;
             }
             catch (IOException fileInputException)
             {
                 System.out.println("Произошла ошибка при открытии файла, попробуйте ещё раз.");
             }
         }
-        while (!fileParsedSuccessfully);
+        while (!filesParsedSuccessfully);
     }
     public Server()
     {

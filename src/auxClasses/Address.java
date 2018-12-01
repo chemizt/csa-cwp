@@ -1,4 +1,4 @@
-package dataClasses;
+package auxClasses;
 
 public class Address
 {

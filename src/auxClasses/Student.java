@@ -1,11 +1,12 @@
-package dataClasses;
+package auxClasses;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Student
 {
     private String firstName, middleName, lastName;
-    private ArrayList<Course> attendedCoursesList;
+    private HashMap<String, Course> attendedCoursesList;
     public void setLastName(String lastName)
     {
         this.lastName = lastName;
@@ -30,11 +31,11 @@ public class Student
     {
         return lastName;
     }
-    public ArrayList<Course> getAttendedCoursesList()
+    public HashMap<String, Course> getAttendedCoursesList()
     {
         return attendedCoursesList;
     }
-    public void setAttendedCoursesList(ArrayList<Course> attendedCoursesList)
+    public void setAttendedCoursesList(HashMap<String, Course> attendedCoursesList)
     {
         this.attendedCoursesList = attendedCoursesList;
     }
