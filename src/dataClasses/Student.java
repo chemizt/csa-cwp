@@ -6,6 +6,10 @@ public class Student
 {
     private String firstName, middleName, lastName;
     private ArrayList<Course> attendedCoursesList;
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
     public String getFirstName()
     {
         return firstName;
