@@ -10,6 +10,7 @@ public class Course
     private String name;
     private Period duration;
     private int intensity;
+    private Tutor hostingTutor;
     public String getName()
     {
         return name;
@@ -34,12 +35,20 @@ public class Course
     {
         this.intensity = intensity;
     }
+    public Tutor getHostingTutor()
+    {
+        return hostingTutor;
+    }
+    public void setHostingTutor(Tutor hostingTutor)
+    {
+        this.hostingTutor = hostingTutor;
+    }
     public void parseString(String strToParse)
     {
-        name = returnSubString(strToParse);
-        strToParse = purgeString(strToParse);
-        duration = Period.parse(returnSubString(strToParse));
-        strToParse = purgeString(strToParse);
-        intensity = Integer.parseInt(returnSubString(strToParse));
+        name = returnSubString(strToParse, "#");
+        strToParse = purgeString(strToParse, "#");
+        duration = Period.parse(returnSubString(strToParse, "#"));
+        strToParse = purgeString(strToParse, "#");
+        intensity = Integer.parseInt(returnSubString(strToParse, "#"));
     }
 }

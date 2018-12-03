@@ -1,14 +1,20 @@
 package auxClasses;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Locale;
+
+import static auxClasses.ParserAuxUtils.purgeString;
+import static auxClasses.ParserAuxUtils.returnSubString;
 
 public class Lesson
 {
     private Course hostedCourse;
     private Tutor hostingTutor;
-    private ZonedDateTime hostingDateTime;
+    private LocalDateTime hostingDateTime;
     private HashMap<String, Student> enrolledStudents;
+    private Schedule container;
     public Course getHostedCourse()
     {
         return hostedCourse;
@@ -25,11 +31,11 @@ public class Lesson
     {
         this.hostingTutor = hostingTutor;
     }
-    public ZonedDateTime getHostingDateTime()
+    public LocalDateTime getHostingDateTime()
     {
         return hostingDateTime;
     }
-    public void setHostingDateTime(ZonedDateTime hostingDateTime)
+    public void setHostingDateTime(LocalDateTime hostingDateTime)
     {
         this.hostingDateTime = hostingDateTime;
     }
@@ -40,5 +46,21 @@ public class Lesson
     public void setEnrolledStudents(HashMap<String, Student> enrolledStudents)
     {
         this.enrolledStudents = enrolledStudents;
+    }
+    public void setContainer(Schedule container)
+    {
+        this.container = container;
+    }
+    public void parseString(String strToParse)
+    {
+        hostingDateTime = LocalDateTime.parse(returnSubString(strToParse, "#"), DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"));
+        strToParse = purgeString(strToParse, "#");
+        hostedCourse = container.getCourses().get(returnSubString(strToParse, "#"));
+        hostingTutor = hostedCourse.getHostingTutor();
+        strToParse = purgeString(strToParse, "#");
+    }
+    public Lesson()
+    {
+        enrolledStudents = new HashMap<>();
     }
 }

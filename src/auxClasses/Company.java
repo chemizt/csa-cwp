@@ -2,12 +2,20 @@ package auxClasses;
 
 import java.util.HashMap;
 
+import static auxClasses.ParserAuxUtils.purgeString;
+import static auxClasses.ParserAuxUtils.returnSubString;
+
 public class Company
 {
     private String name;
     private Address location;
     private HashMap<String, Course> hostedCourses;
     private HashMap<String, Tutor> employedTutors;
+    private Schedule container;
+    public void setContainer(Schedule container)
+    {
+        this.container = container;
+    }
     public String getName()
     {
         return name;
@@ -42,11 +50,17 @@ public class Company
     }
     public void parseCompanyInfoString(String strToParse)
     {
-
+        name = returnSubString(strToParse, "#");
+        strToParse = purgeString(strToParse, "#");
+        while (!returnSubString(strToParse, "#").equals(""))
+        {
+            hostedCourses.put(returnSubString(strToParse, "*"), container.getCourses().get(returnSubString(strToParse, "*")));
+            strToParse = purgeString(strToParse, "*");
+        }
     }
-    public void parseAddressString(String strToParse)
+    public Company()
     {
-        location = new Address();
-
+        hostedCourses = new HashMap<>();
+        employedTutors = new HashMap<>();
     }
 }

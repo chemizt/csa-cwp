@@ -2,34 +2,21 @@ package auxClasses;
 
 import java.util.HashMap;
 
+import static auxClasses.ParserAuxUtils.*;
+
 public class Tutor
 {
-    private String firstName, middleName, lastName;
+    private String name;
     private Company employingCompany;
     private HashMap<String, Course> hostedCoursesList;
-    public String getFirstName()
+    private Schedule container;
+    public String getName()
     {
-        return firstName;
+        return name;
     }
-    public void setFirstName(String firstName)
+    public void setName(String name)
     {
-        this.firstName = firstName;
-    }
-    public String getMiddleName()
-    {
-        return middleName;
-    }
-    public void setMiddleName(String middleName)
-    {
-        this.middleName = middleName;
-    }
-    public String getLastName()
-    {
-        return lastName;
-    }
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
+        this.name = name;
     }
     public Company getEmployingCompany()
     {
@@ -46,5 +33,26 @@ public class Tutor
     public void setHostedCoursesList(HashMap<String, Course> hostedCoursesList)
     {
         this.hostedCoursesList = hostedCoursesList;
+    }
+    public void setContainer(Schedule container)
+    {
+        this.container = container;
+    }
+    public Tutor()
+    {
+        hostedCoursesList = new HashMap<>();
+    }
+    public void parseString(String strToParse)
+    {
+        name = returnSubString(strToParse, "#");
+        strToParse = purgeString(strToParse, "#");
+        employingCompany = container.getCompanies().get(returnSubString(strToParse, "#"));
+        strToParse = purgeString(strToParse, "#");
+        while (!returnSubString(strToParse, "#").equals(""))
+        {
+            hostedCoursesList.put(returnSubString(strToParse, "*"), container.getCourses().get(returnSubString(strToParse, "*")));
+            container.getCourses().get(returnSubString(strToParse, "*")).setHostingTutor(this);
+            strToParse = purgeString(strToParse, "*");
+        }
     }
 }
