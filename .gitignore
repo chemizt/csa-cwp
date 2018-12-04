@@ -4,6 +4,7 @@
 # User-specific stuff
 .idea
 *.txt
+*/META-INF/*
 # CMake
 cmake-build-*/
 

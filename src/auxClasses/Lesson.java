@@ -3,7 +3,7 @@ package auxClasses;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Map;
 
 import static auxClasses.ParserAuxUtils.purgeString;
 import static auxClasses.ParserAuxUtils.returnSubString;
@@ -58,6 +58,14 @@ public class Lesson
         hostedCourse = container.getCourses().get(returnSubString(strToParse, "#"));
         hostingTutor = hostedCourse.getHostingTutor();
         strToParse = purgeString(strToParse, "#");
+        for(Map.Entry<String, Student> studentEntry : container.getStudents().entrySet())
+        {
+            String key = studentEntry.getKey();
+            if (container.getStudents().get(key).getAttendedCoursesList().get(hostedCourse.getName()) != null)
+            {
+                enrolledStudents.put(key, container.getStudents().get(key));
+            }
+        }
     }
     public Lesson()
     {

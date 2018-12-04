@@ -35,6 +35,7 @@ public class Schedule
     private HashMap<String, Student> students;
     private HashMap<String, Tutor> tutors;
     private HashMap<String, Company> companies;
+    private String exceptionCause;
     public HashMap<LocalDateTime, Lesson> getSchedule()
     {
         return schedule;
@@ -48,6 +49,7 @@ public class Schedule
         Path inputFilePath;
         try
         {
+            exceptionCause = "courses.txt";
             System.out.print("Загрузка информации о курсах... ");
             inputFilePath = FileSystems.getDefault().getPath(sourceFilesPath,"courses.txt");
             BufferedReader inputFileBuffer = newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
@@ -60,6 +62,7 @@ public class Schedule
             }
             inputFileBuffer.close();
             System.out.print("готово!\nЗагрузка информации о компаниях... ");
+            exceptionCause = "companies.txt";
             inputFilePath = FileSystems.getDefault().getPath(sourceFilesPath, "companies.txt");
             inputFileBuffer = newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
             while ((inputString = inputFileBuffer.readLine()) != null)
@@ -70,6 +73,7 @@ public class Schedule
                 companies.put(newCompany.getName(), newCompany);
             }
             inputFileBuffer.close();
+            exceptionCause = "addresses.txt";
             inputFilePath = FileSystems.getDefault().getPath(sourceFilesPath, "addresses.txt");
             inputFileBuffer = newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
             while ((inputString = inputFileBuffer.readLine()) != null)
@@ -80,6 +84,7 @@ public class Schedule
             }
             inputFileBuffer.close();
             System.out.print("готово!\nЗагрузка информации о преподавателях... ");
+            exceptionCause = "tutors.txt";
             inputFilePath = FileSystems.getDefault().getPath(sourceFilesPath, "tutors.txt");
             inputFileBuffer = newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
             while ((inputString = inputFileBuffer.readLine()) != null)
@@ -91,6 +96,18 @@ public class Schedule
                 companies.get(newTutor.getEmployingCompany().getName()).getEmployedTutors().put(newTutor.getName(), newTutor);
             }
             inputFileBuffer.close();
+            System.out.print("готово!\nЗагрузка информации о студентах... ");
+            exceptionCause = "students.txt";
+            inputFilePath = FileSystems.getDefault().getPath(sourceFilesPath, "students.txt");
+            inputFileBuffer = newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
+            while ((inputString = inputFileBuffer.readLine()) != null)
+            {
+                Student newStudent = new Student();
+                newStudent.setContainer(this);
+                newStudent.parseString(inputString);
+                students.put(newStudent.getName(), newStudent);
+            }
+            inputFileBuffer.close();
             System.out.print("готово!\nВведите 1, если файл schedule.txt содержит составленное расписание, иначе - любую другую последовательность символов: ");
             Scanner input = new Scanner(System.in);
             String decision = input.nextLine();
@@ -99,6 +116,7 @@ public class Schedule
                 case "1":
                 {
                     System.out.print("Загрузка информации о расписании... ");
+                    exceptionCause = "schedule.txt";
                     inputFilePath = FileSystems.getDefault().getPath(sourceFilesPath, "schedule.txt");
                     inputFileBuffer = newBufferedReader(inputFilePath, StandardCharsets.UTF_8);
                     while ((inputString = inputFileBuffer.readLine()) != null)
@@ -118,21 +136,22 @@ public class Schedule
                     break;
                 }
             }
+            System.out.print("Актуализация информациии... ");
             for(Map.Entry<String, Tutor> tutorEntry : tutors.entrySet())
             {
                 String key = tutorEntry.getKey();
                 companies.get(tutors.get(key).getEmployingCompany().getName()).getEmployedTutors().put(tutors.get(key).getName(), tutors.get(key));
             }
-
+            System.out.print("готово!\n\n");
         }
-        catch (IOException buffReaderException)
+        catch (IOException e)
         {
-            throw buffReaderException;
+            throw new IOException("Произошла ошибка при открытии файла " + exceptionCause + ". Он не существует, имеет кодировку, отличную от UTF-8, или находится в другой директории. Попробуйте ещё раз.");
         }
     }
     public Schedule()
     {
-        schedule = new HashMap<java.time.LocalDateTime, Lesson>();
+        schedule = new HashMap<>();
         courses = new HashMap<>();
         students = new HashMap<>();
         tutors = new HashMap<>();
