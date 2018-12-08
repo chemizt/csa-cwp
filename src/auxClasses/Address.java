@@ -81,4 +81,8 @@ public class Address
         floor = returnSubString(strToParse, "#");
         container.getCompanies().get(companyName).setLocation(this);
     }
+    public void printFull()
+    {
+        System.out.println(postIndex + " " + country + ", г. " + city + ", ул. " + street + ", д. " + building + ", эт. " + floor);
+    }
 }

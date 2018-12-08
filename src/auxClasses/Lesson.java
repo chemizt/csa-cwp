@@ -15,6 +15,10 @@ public class Lesson
     private LocalDateTime hostingDateTime;
     private HashMap<String, Student> enrolledStudents;
     private Schedule container;
+    public Lesson()
+    {
+        enrolledStudents = new HashMap<>();
+    }
     public Course getHostedCourse()
     {
         return hostedCourse;
@@ -66,9 +70,5 @@ public class Lesson
                 enrolledStudents.put(key, container.getStudents().get(key));
             }
         }
-    }
-    public Lesson()
-    {
-        enrolledStudents = new HashMap<>();
     }
 }

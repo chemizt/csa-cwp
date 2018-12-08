@@ -2,6 +2,7 @@ package auxClasses;
 
 import java.time.Period;
 import java.util.HashMap;
+import java.util.Map;
 
 import static auxClasses.ParserAuxUtils.purgeString;
 import static auxClasses.ParserAuxUtils.returnSubString;
@@ -13,6 +14,10 @@ public class Course
     private int intensity;
     private Tutor hostingTutor;
     private HashMap<String, Student> enrolledStudents;
+    public Course()
+    {
+        enrolledStudents = new HashMap<>();
+    }
     public String getName()
     {
         return name;
@@ -57,8 +62,39 @@ public class Course
         strToParse = purgeString(strToParse, "#");
         intensity = Integer.parseInt(returnSubString(strToParse, "#"));
     }
-    public Course()
+    public void printFullInfo()
     {
-        enrolledStudents = new HashMap<>();
+        System.out.println("Название курса: " + name);
+        System.out.println("Интенсивность: " + intensity + " ч. в день");
+        int quantityOfWeeks = (duration.getYears() * 365 + duration.getMonths() * 30 + duration.getDays()) / 7;
+        System.out.print("Продолжительность: ");
+        if (quantityOfWeeks > 0)
+        {
+            if (quantityOfWeeks % 10 == 1 && quantityOfWeeks / 10 != 1)
+            {
+                System.out.println(quantityOfWeeks + " неделя");
+            } else if (quantityOfWeeks % 10 > 1 && quantityOfWeeks % 10 < 5 && quantityOfWeeks / 10 != 1)
+            {
+                System.out.println(quantityOfWeeks + " недели");
+            } else
+            {
+                System.out.println(quantityOfWeeks + " недель");
+            }
+        }
+
+        printEnrolledStudents();
+    }
+    public void printEnrolledStudents()
+    {
+        System.out.print("Слушатели:\n|");
+        int i = 0;
+        for (Map.Entry<String, Student> studentEntry : enrolledStudents.entrySet())
+        {
+            String studentKey = studentEntry.getKey();
+            System.out.print(enrolledStudents.get(studentKey).getName() + "|");
+            i++;
+            if (i % 4 == 0) System.out.println("|");
+        }
+        System.out.println("\n");
     }
 }

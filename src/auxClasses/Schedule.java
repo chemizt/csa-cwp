@@ -7,7 +7,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import static java.nio.file.Files.newBufferedReader;
@@ -16,6 +15,18 @@ public class Schedule
 {
     private HashMap<LocalDateTime, Lesson> schedule;
     private HashMap<String, Course> courses;
+    private HashMap<String, Student> students;
+    private HashMap<String, Tutor> tutors;
+    private HashMap<String, Company> companies;
+    private String exceptionCause;
+    public Schedule()
+    {
+        schedule = new HashMap<>();
+        courses = new HashMap<>();
+        students = new HashMap<>();
+        tutors = new HashMap<>();
+        companies = new HashMap<>();
+    }
     public HashMap<String, Course> getCourses()
     {
         return courses;
@@ -32,10 +43,6 @@ public class Schedule
     {
         return companies;
     }
-    private HashMap<String, Student> students;
-    private HashMap<String, Tutor> tutors;
-    private HashMap<String, Company> companies;
-    private String exceptionCause;
     public HashMap<LocalDateTime, Lesson> getSchedule()
     {
         return schedule;
@@ -136,25 +143,12 @@ public class Schedule
                     break;
                 }
             }
-            System.out.print("Актуализация информациии... ");
-            for(Map.Entry<String, Tutor> tutorEntry : tutors.entrySet())
-            {
-                String key = tutorEntry.getKey();
-                companies.get(tutors.get(key).getEmployingCompany().getName()).getEmployedTutors().put(tutors.get(key).getName(), tutors.get(key));
-            }
+            System.out.print("Актуализация информации... ");
             System.out.print("готово!\n\n");
         }
         catch (IOException e)
         {
             throw new IOException("Произошла ошибка при открытии файла " + exceptionCause + ". Он не существует, имеет кодировку, отличную от UTF-8, или находится в другой директории. Попробуйте ещё раз.");
         }
-    }
-    public Schedule()
-    {
-        schedule = new HashMap<>();
-        courses = new HashMap<>();
-        students = new HashMap<>();
-        tutors = new HashMap<>();
-        companies = new HashMap<>();
     }
 }

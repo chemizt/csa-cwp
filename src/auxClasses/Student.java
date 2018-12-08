@@ -1,6 +1,7 @@
 package auxClasses;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static auxClasses.ParserAuxUtils.purgeString;
 import static auxClasses.ParserAuxUtils.returnSubString;
@@ -10,9 +11,17 @@ public class Student
     private String name;
     private HashMap<String, Course> attendedCoursesList;
     private Schedule container;
+    public Student()
+    {
+        attendedCoursesList = new HashMap<>();
+    }
     public HashMap<String, Course> getAttendedCoursesList()
     {
         return attendedCoursesList;
+    }
+    public void setAttendedCoursesList(HashMap<String, Course> attendedCoursesList)
+    {
+        this.attendedCoursesList = attendedCoursesList;
     }
     public String getName()
     {
@@ -21,10 +30,6 @@ public class Student
     public void setName(String name)
     {
         this.name = name;
-    }
-    public void setAttendedCoursesList(HashMap<String, Course> attendedCoursesList)
-    {
-        this.attendedCoursesList = attendedCoursesList;
     }
     public void setContainer(Schedule container)
     {
@@ -41,8 +46,18 @@ public class Student
            strToParse = purgeString(strToParse, "*");
         }
     }
-    public Student()
+    public void printFullInfo()
     {
-        attendedCoursesList = new HashMap<>();
+        System.out.println("Имя: " + name);
+        System.out.print("Список прослушиваемых курсов:\n|");
+        int i = 0;
+        for (Map.Entry<String, Course> courseEntry : attendedCoursesList.entrySet())
+        {
+            String courseEntryKey = courseEntry.getKey();
+            System.out.print(attendedCoursesList.get(courseEntryKey).getName() + "|");
+            i++;
+            if (i % 4 == 0) System.out.print("\n|");
+        }
+        System.out.println("\n");
     }
 }

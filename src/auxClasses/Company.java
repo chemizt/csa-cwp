@@ -1,6 +1,7 @@
 package auxClasses;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static auxClasses.ParserAuxUtils.purgeString;
 import static auxClasses.ParserAuxUtils.returnSubString;
@@ -12,6 +13,11 @@ public class Company
     private HashMap<String, Course> hostedCourses;
     private HashMap<String, Tutor> employedTutors;
     private Schedule container;
+    public Company()
+    {
+        hostedCourses = new HashMap<>();
+        employedTutors = new HashMap<>();
+    }
     public void setContainer(Schedule container)
     {
         this.container = container;
@@ -58,9 +64,30 @@ public class Company
             strToParse = purgeString(strToParse, "*");
         }
     }
-    public Company()
+    public void printFullInfo()
     {
-        hostedCourses = new HashMap<>();
-        employedTutors = new HashMap<>();
+        System.out.println("Название: " + name);
+        System.out.print("Расположение: ");
+        location.printFull();
+        System.out.print("Проводимые курсы:\n|");
+        int i = 0;
+        for (Map.Entry<String, Course> courseEntry : hostedCourses.entrySet())
+        {
+            String courseEntryKey = courseEntry.getKey();
+            System.out.print(hostedCourses.get(courseEntryKey).getName() + "|");
+            i++;
+            if (i % 4 == 0) System.out.print("\n|");
+        }
+        System.out.println();
+        System.out.print("Штат преподавателей:\n|");
+        i = 0;
+        for (Map.Entry<String, Tutor> tutorEntry : employedTutors.entrySet())
+        {
+            String tutorEntryKey = tutorEntry.getKey();
+            System.out.print(employedTutors.get(tutorEntryKey).getName() + "|");
+            i++;
+            if (i % 4 == 0) System.out.print("\n|");
+        }
+        System.out.println();
     }
 }
