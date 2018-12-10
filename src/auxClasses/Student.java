@@ -46,18 +46,20 @@ public class Student
            strToParse = purgeString(strToParse, "*");
         }
     }
-    public void printFullInfo()
+    public String returnFullInfo()
     {
-        System.out.println("Имя: " + name);
-        System.out.print("Список прослушиваемых курсов:\n|");
+        String result;
+        result = "Имя: " + name;
+        result += "\nСписок прослушиваемых курсов:\n|";
         int i = 0;
         for (Map.Entry<String, Course> courseEntry : attendedCoursesList.entrySet())
         {
             String courseEntryKey = courseEntry.getKey();
-            System.out.print(attendedCoursesList.get(courseEntryKey).getName() + "|");
+            result += attendedCoursesList.get(courseEntryKey).getName() + "|";
             i++;
-            if (i % 4 == 0) System.out.print("\n|");
+            if (i % 4 == 0) result += "\n|";
         }
-        System.out.println("\n");
+        result += "\n";
+        return result;
     }
 }

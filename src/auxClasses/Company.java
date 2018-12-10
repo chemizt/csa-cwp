@@ -64,30 +64,30 @@ public class Company
             strToParse = purgeString(strToParse, "*");
         }
     }
-    public void printFullInfo()
+    public String returnFullInfo()
     {
-        System.out.println("Название: " + name);
-        System.out.print("Расположение: ");
-        location.printFull();
-        System.out.print("Проводимые курсы:\n|");
+        String result;
+        result = "Название: " + name;
+        result += "\nРасположение: " + location.returnFull();
+        result += "\nПроводимые курсы:\n|";
         int i = 0;
         for (Map.Entry<String, Course> courseEntry : hostedCourses.entrySet())
         {
             String courseEntryKey = courseEntry.getKey();
-            System.out.print(hostedCourses.get(courseEntryKey).getName() + "|");
+            result += hostedCourses.get(courseEntryKey).getName() + "|";
             i++;
-            if (i % 4 == 0) System.out.print("\n|");
+            if (i % 4 == 0) result += "\n|";
         }
-        System.out.println();
-        System.out.print("Штат преподавателей:\n|");
+        result += "\nШтат преподавателей:\n|";
         i = 0;
         for (Map.Entry<String, Tutor> tutorEntry : employedTutors.entrySet())
         {
             String tutorEntryKey = tutorEntry.getKey();
-            System.out.print(employedTutors.get(tutorEntryKey).getName() + "|");
+            result += employedTutors.get(tutorEntryKey).getName() + "|";
             i++;
-            if (i % 4 == 0) System.out.print("\n|");
+            if (i % 4 == 0) result += "\n|";
         }
-        System.out.println();
+        result += "\n";
+        return result;
     }
 }

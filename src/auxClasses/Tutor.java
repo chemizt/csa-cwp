@@ -57,19 +57,21 @@ public class Tutor
             strToParse = purgeString(strToParse, "*");
         }
     }
-    public void printFullInfo()
+    public String returnFullInfo()
     {
-        System.out.println("Имя: " + name);
-        System.out.println("Работодатель: " + employingCompany.getName());
-        System.out.print("Читаемые курсы:\n|");
+        String result;
+        result = "Имя: " + name;
+        result += "\nРаботодатель: " + employingCompany.getName();
+        result += "\nЧитаемые курсы:\n|";
         int i = 0;
         for (Map.Entry<String, Course> courseEntry : hostedCoursesList.entrySet())
         {
             String courseEntryKey = courseEntry.getKey();
-            System.out.print(hostedCoursesList.get(courseEntryKey).getName() + "|");
+            result += hostedCoursesList.get(courseEntryKey).getName() + "|";
             i++;
-            if (i % 4 == 0) System.out.print("\n|");
+            if (i % 4 == 0) result += "\n|";
         }
-        System.out.println("\n");
+        result += "\n";
+        return result;
     }
 }

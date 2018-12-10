@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -150,5 +151,19 @@ public class Schedule
         {
             throw new IOException("Произошла ошибка при открытии файла " + exceptionCause + ". Он не существует, имеет кодировку, отличную от UTF-8, или находится в другой директории. Попробуйте ещё раз.");
         }
+    }
+    public HashMap<LocalDateTime, Lesson> getScheduleFor(Object person, String personName, Period timeFrame, LocalDateTime startDate)
+    {
+        HashMap<LocalDateTime, Lesson> result = new HashMap<>();
+        if (person.getClass().getName().contains("Student"))
+        {
+            startDate.plus(timeFrame);
+        }
+        else
+        if (person.getClass().getName().contains("Tutor"))
+        {
+
+        }
+        return result;
     }
 }

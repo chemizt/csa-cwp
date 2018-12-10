@@ -62,39 +62,44 @@ public class Course
         strToParse = purgeString(strToParse, "#");
         intensity = Integer.parseInt(returnSubString(strToParse, "#"));
     }
-    public void printFullInfo()
+    public String returnFullInfo()
     {
-        System.out.println("Название курса: " + name);
-        System.out.println("Интенсивность: " + intensity + " ч. в день");
+        String result;
+        result = "Название курса: " + name;
+        result += "\nИнтенсивность: " + intensity + " ч. в день";
         int quantityOfWeeks = (duration.getYears() * 365 + duration.getMonths() * 30 + duration.getDays()) / 7;
-        System.out.print("Продолжительность: ");
+        result += "\nПродолжительность: ";
         if (quantityOfWeeks > 0)
         {
             if (quantityOfWeeks % 10 == 1 && quantityOfWeeks / 10 != 1)
             {
-                System.out.println(quantityOfWeeks + " неделя");
-            } else if (quantityOfWeeks % 10 > 1 && quantityOfWeeks % 10 < 5 && quantityOfWeeks / 10 != 1)
+                result += quantityOfWeeks + " неделя\n";
+            }
+            else if (quantityOfWeeks % 10 > 1 && quantityOfWeeks % 10 < 5 && quantityOfWeeks / 10 != 1)
             {
-                System.out.println(quantityOfWeeks + " недели");
-            } else
+                result += quantityOfWeeks + " недели\n";
+            }
+            else
             {
-                System.out.println(quantityOfWeeks + " недель");
+                result += quantityOfWeeks + " недель\n";
             }
         }
-
-        printEnrolledStudents();
+        result += returnEnrolledStudents();
+        return result;
     }
-    public void printEnrolledStudents()
+    public String returnEnrolledStudents()
     {
-        System.out.print("Слушатели:\n|");
+        String result;
+        result = "Слушатели:\n|";
         int i = 0;
         for (Map.Entry<String, Student> studentEntry : enrolledStudents.entrySet())
         {
             String studentKey = studentEntry.getKey();
-            System.out.print(enrolledStudents.get(studentKey).getName() + "|");
+            result += enrolledStudents.get(studentKey).getName() + "|";
             i++;
-            if (i % 4 == 0) System.out.println("|");
+            if (i % 4 == 0) result += "|\n";
         }
-        System.out.println("\n");
+        result +=("\n");
+        return result;
     }
 }
