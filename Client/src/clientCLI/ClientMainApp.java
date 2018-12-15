@@ -1,4 +1,4 @@
-package client;
+package clientCLI;
 
 import java.io.IOException;
 import java.net.Inet4Address;

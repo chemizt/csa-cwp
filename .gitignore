@@ -10,6 +10,7 @@ cmake-build-*/
 
 # File-based project format
 *.iws
+*.ipr
 
 # IntelliJ
 out/

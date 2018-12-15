@@ -52,16 +52,17 @@ public class Server
     {
         while (true)
         {
+            Socket client = null;
             try
             {
-                Socket client = srvSocket.accept();
-                System.out.println("\nКлиент с адресом " + srvSocket.getInetAddress().toString().replace("/", "") + ":" + srvSocket.getLocalPort() + " подключился. ");
+                client = srvSocket.accept();
+                System.out.println("\nКлиент с адресом " + client.getInetAddress().toString().replace("/", "") + " подключился.");
                 ServerConnectionProcessor scp = new ServerConnectionProcessor(client, this);
                 scp.start();
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                System.out.println("\nКлиент с адресом " + client.getInetAddress().toString().replace("/", "")  + " отключился.");
             }
         }
     }
@@ -133,7 +134,7 @@ class ServerConnectionProcessor extends Thread
                 printOperationsList();
                 clientOutput.writeUTF("\nВаш выбор: ");
                 decision = clientInput.readUTF();
-                System.out.println("Клиент с адресом " + clientSocket.getInetAddress().toString().replace("/", "") + ":" + clientSocket.getLocalPort() + " запросил операцию " + decision);
+                System.out.print("Клиент с адресом " + clientSocket.getInetAddress().toString().replace("/", "") + " запросил операцию " + decision);
                 switch (decision.toUpperCase(Locale.getDefault()))
                 {
                     case "1":
@@ -490,7 +491,7 @@ class ServerConnectionProcessor extends Thread
             while (!decision.toUpperCase(Locale.getDefault()).equals("X-IT"));
             clientOutput.writeUTF("terminate");
             clientOutput.close(); clientInput.close();
-            System.out.println("\nКлиент с адресом " + clientSocket.getInetAddress().toString().replace("/", "") + ":" + clientSocket.getLocalPort() + " отключился. ");
+            System.out.println("\nКлиент с адресом " + clientSocket.getInetAddress().toString().replace("/", "") + " отключился. ");
             clientSocket.close();
         }
         catch (IOException e)
