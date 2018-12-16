@@ -14,7 +14,6 @@ public class Client
     private String serverName;
     private DataInputStream srvOutput; //response from server
     private DataOutputStream srvInput; //query to server
-    public boolean operationTerminated;
     public Client(Inet4Address srvAddr, int srvPort, String srvName) throws IOException
     {
         try
@@ -30,34 +29,112 @@ public class Client
             throw connException;
         }
     }
-    public void run()
+    public void requestFullList(String operationID)
     {
         try
         {
-            String query; operationTerminated = false;
-            ServerOutputProcessor sop = new ServerOutputProcessor(srvOutput, this);
-            sop.start();
-            while (!operationTerminated)
-            {
-                query = input.nextLine();
-                srvInput.writeUTF(query);
-            }
+            srvInput.writeUTF(operationID);
         }
         catch (IOException connException)
         {
             System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
         }
     }
+    public void requestStudentsByCourses()
+    {
+        try
+        {
+            srvInput.writeUTF("5");
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+    }
+    public void requestCoursesForStudent(String studName)
+    {
+        try
+        {
+            srvInput.writeUTF("6");
+            Thread.sleep(125);
+            srvInput.writeUTF(studName);
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void requestTutorsByCourses()
+    {
+        try
+        {
+            srvInput.writeUTF("7");
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+    }
+    public void requestTutorsByCompanies()
+    {
+        try
+        {
+            srvInput.writeUTF("8");
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+    }
+    public void requestFullInfoFor(String name, String operationID)
+    {
+        try
+        {
+            srvInput.writeUTF(operationID);
+            Thread.sleep(125);
+            srvInput.writeUTF(name);
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public String processServerOutput()
+    {
+        String response = "";
+        try
+        {
+            while (srvOutput.available() > 0)
+            {
+                response = response.concat(srvOutput.readUTF());
+            }
+        }
+        catch (IOException exception)
+        {
+            System.out.println("Ошибка при выводе сообщения от сервера");
+        }
+        return response;
+    }
     public void terminateServerConnection()
     {
         try
         {
             srvInput.writeUTF("x-it");
+            Thread.sleep(125);
             srvOutput.close();
             srvInput.close();
             clientSocket.close();
         }
-        catch (IOException e)
+        catch (IOException e){}
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -66,32 +143,20 @@ public class Client
 
 class ServerOutputProcessor extends Thread
 {
-    public Client container;
     public DataInputStream srvOutput;
-    public ServerOutputProcessor(DataInputStream o, Client c)
+    public String response;
+    public ServerOutputProcessor(DataInputStream o)
     {
-        container = c;
         srvOutput = o;
+        response = "";
     }
     public void run()
     {
-        String response;
         try
         {
-            while (!container.operationTerminated)
+            while (srvOutput.available() > 0)
             {
-                while (srvOutput.available() > 0)
-                {
-                    response = srvOutput.readUTF();
-                    if (response.contains("terminate"))
-                    {
-                        container.operationTerminated = true;
-                    }
-                    else
-                    {
-                        System.out.print(response);
-                    }
-                }
+                response = response.concat(srvOutput.readUTF());
             }
         }
         catch (IOException exception)
