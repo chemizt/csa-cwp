@@ -102,4 +102,8 @@ public class Course
         result +=("\n");
         return result;
     }
+    public String returnWritableFull()
+    {
+        return name + "#" + duration.toString() + "#" + intensity + "#";
+    }
 }

@@ -74,4 +74,16 @@ public class Tutor
         result += "\n";
         return result;
     }
+    public String returnWritableFull()
+    {
+        String result;
+        result = name + "#" + employingCompany.getName() + "#";
+        for (Map.Entry<String, Course> courseEntry : hostedCoursesList.entrySet())
+        {
+            String courseEntryKey = courseEntry.getKey();
+            result += hostedCoursesList.get(courseEntryKey).getName() + "*";
+        }
+        result += "#";
+        return result;
+    }
 }

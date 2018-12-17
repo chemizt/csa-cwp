@@ -111,10 +111,12 @@ class ServerConnectionProcessor extends Thread
             clientOutput.writeUTF("14. Изменить данные о преподавателе.\n");
             clientOutput.writeUTF("15. Изменить данные о студенте.\n");
             clientOutput.writeUTF("16. Изменить данные о курсе.\n");
-            clientOutput.writeUTF("17. Добавить или удалить преподавателя.\n");
-            clientOutput.writeUTF("18. Добавить или удалить студента.\n");
-            clientOutput.writeUTF("19. Добавить или удалить курс.\n");
-            clientOutput.writeUTF("20. Составить расписание занятий для курса.\n");
+            clientOutput.writeUTF("17. Изменить данные о компании.\n");
+            clientOutput.writeUTF("18. Добавить или удалить преподавателя.\n");
+            clientOutput.writeUTF("19. Добавить или удалить студента.\n");
+            clientOutput.writeUTF("20. Добавить или удалить курс.\n");
+            clientOutput.writeUTF("21. Добавить или удалить компанию.\n");
+            clientOutput.writeUTF("22. Составить расписание занятий для курса.\n");
         }
         catch (IOException e)
         {

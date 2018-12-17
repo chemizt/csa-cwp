@@ -71,4 +71,8 @@ public class Lesson
             }
         }
     }
+    public String returnWritableFull()
+    {
+        return hostingDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")) + "#" + hostedCourse.getName() + "#";
+    }
 }

@@ -90,4 +90,20 @@ public class Company
         result += "\n";
         return result;
     }
+    public String returnWritableAddress()
+    {
+        return name + "#" + location.returnWritableFull();
+    }
+    public String returnWritableFull()
+    {
+        String result;
+        result = name + "#";
+        for (Map.Entry<String, Course> courseEntry : hostedCourses.entrySet())
+        {
+            String courseEntryKey = courseEntry.getKey();
+            result += hostedCourses.get(courseEntryKey).getName() + "*";
+        }
+        result += "#";
+        return result;
+    }
 }

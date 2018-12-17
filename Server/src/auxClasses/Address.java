@@ -85,4 +85,8 @@ public class Address
     {
         return postIndex + " " + country + ", г. " + city + ", ул. " + street + ", д. " + building + ", эт. " + floor;
     }
+    public String returnWritableFull()
+    {
+        return postIndex + "#" + country + "#" + city + "#" + street + "#" + building + "#" + floor + "#";
+    }
 }

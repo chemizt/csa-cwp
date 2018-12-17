@@ -62,4 +62,16 @@ public class Student
         result += "\n";
         return result;
     }
+    public String returnWritableFull()
+    {
+        String result;
+        result = name + "#";
+        for (Map.Entry<String, Course> courseEntry : attendedCoursesList.entrySet())
+        {
+            String courseEntryKey = courseEntry.getKey();
+            result += attendedCoursesList.get(courseEntryKey).getName() + "*";
+        }
+        result += "#";
+        return result;
+    }
 }

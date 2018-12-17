@@ -225,14 +225,10 @@ class ServerConnectionProcessor extends Thread
                     }
                     case "9":
                     {
-                        boolean inputSuccessful = false;
                         String tutorName;
-                        do
-                        {
                             tutorName = clientInput.readUTF();
                             if (container.coursesSchedule.getTutors().get(tutorName) != null)
                             {
-                                inputSuccessful = true;
                                 clientOutput.writeUTF("\nПреподаватель " + tutorName + " найден! Вот полная информация о нём:\n");
                                 clientOutput.writeUTF(container.coursesSchedule.getTutors().get(tutorName).returnFullInfo());
                             }
@@ -240,20 +236,14 @@ class ServerConnectionProcessor extends Thread
                             {
                                 clientOutput.writeUTF("Преподавателя с таким именем не существует, имя введено с ошибкой, или не соответствует формату");
                             }
-                        }
-                        while (!inputSuccessful && !tutorName.toUpperCase(Locale.getDefault()).equals("N"));
                         break;
                     }
                     case "10":
                     {
-                        boolean inputSuccessful = false;
                         String studName;
-                        do
-                        {
                             studName = clientInput.readUTF();
                             if (container.coursesSchedule.getStudents().get(studName) != null)
                             {
-                                inputSuccessful = true;
                                 clientOutput.writeUTF("\nСтудент " + studName + " найден! Вот полная информация о нём:\n");
                                 clientOutput.writeUTF(container.coursesSchedule.getStudents().get(studName).returnFullInfo());
                             }
@@ -261,20 +251,14 @@ class ServerConnectionProcessor extends Thread
                             {
                                 clientOutput.writeUTF("Студента с таким именем не существует, имя введено с ошибкой, или не соответствует формату");
                             }
-                        }
-                        while (!inputSuccessful && !studName.toUpperCase(Locale.getDefault()).equals("N"));
                         break;
                     }
                     case "11":
                     {
-                        boolean inputSuccessful = false;
                         String courseName;
-                        do
-                        {
                             courseName = clientInput.readUTF();
                             if (container.coursesSchedule.getCourses().get(courseName) != null)
                             {
-                                inputSuccessful = true;
                                 clientOutput.writeUTF("\nКурс '" + courseName + "' найден! Вот полная информация о нём:\n");
                                 clientOutput.writeUTF(container.coursesSchedule.getCourses().get(courseName).returnFullInfo());
                             }
@@ -282,20 +266,14 @@ class ServerConnectionProcessor extends Thread
                             {
                                 clientOutput.writeUTF("Курса с таким названием не существует. Чтобы уточнить название, Вы можете запросить полный список курсов.");
                             }
-                        }
-                        while (!inputSuccessful && !courseName.toUpperCase(Locale.getDefault()).equals("N"));
-                        break;
+                            break;
                     }
                     case "12":
                     {
-                        boolean inputSuccessful = false;
                         String companyName;
-                        do
-                        {
                             companyName = clientInput.readUTF();
                             if (container.coursesSchedule.getCompanies().get(companyName) != null)
                             {
-                                inputSuccessful = true;
                                 clientOutput.writeUTF("\nКомпания " + companyName + " найдена! Вот полная информация о ней:\n");
                                 clientOutput.writeUTF(container.coursesSchedule.getCompanies().get(companyName).returnFullInfo());
                             }
@@ -303,8 +281,6 @@ class ServerConnectionProcessor extends Thread
                             {
                                 clientOutput.writeUTF("Компании с таким названием не существует. Чтобы уточнить название, Вы можете запросить полный список компаний.");
                             }
-                        }
-                        while (!inputSuccessful && !companyName.toUpperCase(Locale.getDefault()).equals("N"));
                         clientOutput.writeUTF("");
                         break;
                     }
@@ -372,6 +348,17 @@ class ServerConnectionProcessor extends Thread
                     }
                     case "14":
                     {
+                        String tutorName;
+                        tutorName = clientInput.readUTF();
+                        if (container.coursesSchedule.getTutors().get(tutorName) != null)
+                        {
+                            clientOutput.writeUTF("\nПреподаватель " + tutorName + " найден! Вот полная информация о нём:\n");
+                            clientOutput.writeUTF(container.coursesSchedule.getTutors().get(tutorName).returnFullInfo());
+                        }
+                        else
+                        {
+                            clientOutput.writeUTF("Преподавателя с таким именем не существует, имя введено с ошибкой, или не соответствует формату");
+                        }
                         break;
                     }
                     case "15":
@@ -398,14 +385,20 @@ class ServerConnectionProcessor extends Thread
                     {
                         break;
                     }
+                    case "21":
+                    {
+                        break;
+                    }
+                    case "22":
+                    {
+                        break;
+                    }
                     case "X-IT":
                     {
-                        clientOutput.writeUTF("Завершение сеанса... нажмите Enter, чтобы завершить работу клиента.");
                         break;
                     }
                     default:
                     {
-                        clientOutput.writeUTF("Введённое значение не определено.\n");
                         break;
                     }
                 }
@@ -415,6 +408,7 @@ class ServerConnectionProcessor extends Thread
             clientOutput.close(); clientInput.close();
             System.out.println(getTimestamp() + " Клиент с адресом " + clientSocket.getInetAddress().toString().replace("/", "") + " отключился. ");
             clientSocket.close();
+            container.coursesSchedule.dumpToFiles();
         }
         catch (IOException e)
         {

@@ -1,13 +1,14 @@
 package auxClasses;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import static java.nio.file.Files.newBufferedReader;
@@ -20,6 +21,7 @@ public class Schedule
     private HashMap<String, Tutor> tutors;
     private HashMap<String, Company> companies;
     private String exceptionCause;
+    private String workingDirectory;
     public Schedule()
     {
         schedule = new HashMap<>();
@@ -55,6 +57,7 @@ public class Schedule
     public void parseFiles(String sourceFilesPath) throws IOException
     {
         Path inputFilePath;
+        workingDirectory = sourceFilesPath;
         try
         {
             exceptionCause = "courses.txt";
@@ -150,6 +153,88 @@ public class Schedule
         catch (IOException e)
         {
             throw new IOException("Произошла ошибка при открытии файла " + exceptionCause + ". Он не существует, имеет кодировку, отличную от UTF-8, или находится в другой директории. Попробуйте ещё раз.");
+        }
+    }
+    public void dumpToFiles() throws IOException
+    {
+        Path outputFilePath;
+        try
+        {
+            exceptionCause = "courses.txt";
+            System.out.print("Выгрузка информации о курсах... ");
+            outputFilePath = FileSystems.getDefault().getPath(workingDirectory, "courses.txt");
+            BufferedWriter fileOutput = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8);
+            HashMap<String, Course> outputCoursesList = new HashMap<>(courses);
+            for (Map.Entry<String, Course> courseEntry : outputCoursesList.entrySet())
+            {
+                String courseEntryKey = courseEntry.getKey();
+                fileOutput.write(outputCoursesList.get(courseEntryKey).returnWritableFull());
+                fileOutput.newLine();
+            }
+            fileOutput.close();
+            System.out.print("готово!\nВыгрузка информации о компаниях... ");
+            exceptionCause = "companies.txt";
+            outputFilePath = FileSystems.getDefault().getPath(workingDirectory, "companies.txt");
+            fileOutput = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8);
+            HashMap<String, Company> outputCompaniesList = new HashMap<>(companies);
+            for (Map.Entry<String, Company> companyEntry : outputCompaniesList.entrySet())
+            {
+                String courseEntryKey = companyEntry.getKey();
+                fileOutput.write(outputCompaniesList.get(courseEntryKey).returnWritableFull());
+                fileOutput.newLine();
+            }
+            fileOutput.close();
+            exceptionCause = "addresses.txt";
+            outputFilePath = FileSystems.getDefault().getPath(workingDirectory, "addresses.txt");
+            fileOutput = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8);
+            for (Map.Entry<String, Company> companyEntry : outputCompaniesList.entrySet())
+            {
+                String courseEntryKey = companyEntry.getKey();
+                fileOutput.write(outputCompaniesList.get(courseEntryKey).returnWritableAddress());
+                fileOutput.newLine();
+            }
+            fileOutput.close();
+            System.out.print("готово!\nВыгрузка информации о преподавателях... ");
+            exceptionCause = "tutors.txt";
+            outputFilePath = FileSystems.getDefault().getPath(workingDirectory, "tutors.txt");
+            fileOutput = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8);
+            HashMap<String, Tutor> outputTutorsList = new HashMap<>(tutors);
+            for (Map.Entry<String, Tutor> tutorEntry : outputTutorsList.entrySet())
+            {
+                String courseEntryKey = tutorEntry.getKey();
+                fileOutput.write(outputTutorsList.get(courseEntryKey).returnWritableFull());
+                fileOutput.newLine();
+            }
+            fileOutput.close();
+            System.out.print("готово!\nВыгрузка информации о студентах... ");
+            exceptionCause = "students.txt";
+            outputFilePath = FileSystems.getDefault().getPath(workingDirectory, "students.txt");
+            fileOutput = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8);
+            HashMap<String, Student> outputStudentsList = new HashMap<>(students);
+            for (Map.Entry<String, Student> studentEntry : outputStudentsList.entrySet())
+            {
+                String courseEntryKey = studentEntry.getKey();
+                fileOutput.write(outputStudentsList.get(courseEntryKey).returnWritableFull());
+                fileOutput.newLine();
+            }
+            fileOutput.close();
+            System.out.print("готово!\nВыгрузка информации о расписании... ");
+            exceptionCause = "schedule.txt";
+            outputFilePath = FileSystems.getDefault().getPath(workingDirectory, "schedule.txt");
+            fileOutput = Files.newBufferedWriter(outputFilePath, StandardCharsets.UTF_8);
+            HashMap<LocalDateTime, Lesson> outputSchedule = new HashMap<>(schedule);
+            for (Map.Entry<LocalDateTime, Lesson> lessonEntry : outputSchedule.entrySet())
+            {
+                LocalDateTime courseEntryKey = lessonEntry.getKey();
+                fileOutput.write(outputSchedule.get(courseEntryKey).returnWritableFull());
+                fileOutput.newLine();
+            }
+            fileOutput.close();
+            System.out.print("готово!\n");
+        }
+        catch (IOException e)
+        {
+            throw new IOException("Произошла ошибка при записи в файл " + exceptionCause + ". Он не существует, имеет кодировку, отличную от UTF-8, или находится в другой директории. Попробуйте ещё раз.");
         }
     }
     public HashMap<LocalDateTime, Lesson> getScheduleFor(Object person, String personName, Period timeFrame, LocalDateTime startDate)
