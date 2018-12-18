@@ -37,20 +37,31 @@ public class Student
     }
     public void parseString(String strToParse)
     {
-        name = returnSubString(strToParse, "#");
+        name = returnSubString(strToParse, "#").equals("") ? name : returnSubString(strToParse, "#");
         strToParse = purgeString(strToParse, "#");
-        while (!returnSubString(strToParse, "#").equals(""))
+        while (!returnSubString(strToParse, "*").equals(""))
         {
-           attendedCoursesList.put(returnSubString(strToParse, "*"), container.getCourses().get(returnSubString(strToParse, "*")));
-           container.getCourses().get(returnSubString(strToParse, "*")).getEnrolledStudents().put(name, this);
-           strToParse = purgeString(strToParse, "*");
+            if (container.getCourses().get(returnSubString(strToParse, "*")) == null)
+            {
+                Course newCourse = new Course();
+                newCourse.setName(returnSubString(strToParse, "*"));
+                newCourse.getEnrolledStudents().put(name, this);
+                container.getCourses().put(newCourse.getName(), newCourse);
+                attendedCoursesList.put(newCourse.getName(), newCourse);
+            }
+            else
+            {
+                attendedCoursesList.put(returnSubString(strToParse, "*"), container.getCourses().get(returnSubString(strToParse, "*")));
+                container.getCourses().get(returnSubString(strToParse, "*")).getEnrolledStudents().put(name, this);
+            }
+            strToParse = purgeString(strToParse, "*");
         }
     }
     public String returnFullInfo()
     {
         String result;
         result = "Имя: " + name;
-        result += "\nСписок прослушиваемых курсов:\n|";
+        result += (attendedCoursesList.size() <= 0 ? "" : "\nСписок прослушиваемых курсов:\n|");
         int i = 0;
         for (Map.Entry<String, Course> courseEntry : attendedCoursesList.entrySet())
         {

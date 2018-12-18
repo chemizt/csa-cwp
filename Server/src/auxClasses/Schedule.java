@@ -1,6 +1,8 @@
 package auxClasses;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -80,7 +82,7 @@ public class Schedule
             {
                 Company newCompany = new Company();
                 newCompany.setContainer(this);
-                newCompany.parseCompanyInfoString(inputString);
+                newCompany.parseString(inputString);
                 companies.put(newCompany.getName(), newCompany);
             }
             inputFileBuffer.close();

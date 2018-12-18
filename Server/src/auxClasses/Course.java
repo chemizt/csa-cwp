@@ -13,6 +13,10 @@ public class Course
     private Period duration;
     private int intensity;
     private Tutor hostingTutor;
+    public void setEnrolledStudents(HashMap<String, Student> enrolledStudents)
+    {
+        this.enrolledStudents = enrolledStudents;
+    }
     private HashMap<String, Student> enrolledStudents;
     public Course()
     {
@@ -56,32 +60,35 @@ public class Course
     }
     public void parseString(String strToParse)
     {
-        name = returnSubString(strToParse, "#");
+        name = returnSubString(strToParse, "#").equals("") ? name : returnSubString(strToParse, "#");
         strToParse = purgeString(strToParse, "#");
-        duration = Period.parse(returnSubString(strToParse, "#"));
+        duration = returnSubString(strToParse, "#").equals("") ? duration : Period.parse(returnSubString(strToParse, "#"));
         strToParse = purgeString(strToParse, "#");
-        intensity = Integer.parseInt(returnSubString(strToParse, "#"));
+        intensity = returnSubString(strToParse, "#").equals("") ? intensity : Integer.parseInt(returnSubString(strToParse, "#"));
     }
     public String returnFullInfo()
     {
         String result;
         result = "Название курса: " + name;
-        result += "\nИнтенсивность: " + intensity + " ч. в день";
-        int quantityOfWeeks = (duration.getYears() * 365 + duration.getMonths() * 30 + duration.getDays()) / 7;
-        result += "\nПродолжительность: ";
-        if (quantityOfWeeks > 0)
+        result += (intensity == 0 ? "\n" : "\nИнтенсивность: " + intensity + " ч. в день");
+        if (duration != null)
         {
-            if (quantityOfWeeks % 10 == 1 && quantityOfWeeks / 10 != 1)
+            int quantityOfWeeks = (duration.getYears() * 365 + duration.getMonths() * 30 + duration.getDays()) / 7;
+            result += "\nПродолжительность: ";
+            if (quantityOfWeeks > 0)
             {
-                result += quantityOfWeeks + " неделя\n";
-            }
-            else if (quantityOfWeeks % 10 > 1 && quantityOfWeeks % 10 < 5 && quantityOfWeeks / 10 != 1)
-            {
-                result += quantityOfWeeks + " недели\n";
-            }
-            else
-            {
-                result += quantityOfWeeks + " недель\n";
+                if (quantityOfWeeks % 10 == 1 && quantityOfWeeks / 10 != 1)
+                {
+                    result += quantityOfWeeks + " неделя\n";
+                }
+                else if (quantityOfWeeks % 10 > 1 && quantityOfWeeks % 10 < 5 && quantityOfWeeks / 10 != 1)
+                {
+                    result += quantityOfWeeks + " недели\n";
+                }
+                else
+                {
+                    result += quantityOfWeeks + " недель\n";
+                }
             }
         }
         result += returnEnrolledStudents();
@@ -90,7 +97,7 @@ public class Course
     public String returnEnrolledStudents()
     {
         String result;
-        result = "Слушатели:\n|";
+        result = (enrolledStudents.size() <= 0 ? "" : "Слушатели:\n|");
         int i = 0;
         for (Map.Entry<String, Student> studentEntry : enrolledStudents.entrySet())
         {
@@ -104,6 +111,6 @@ public class Course
     }
     public String returnWritableFull()
     {
-        return name + "#" + duration.toString() + "#" + intensity + "#";
+        return ((name == null) ? "" : name) + "#" + ((duration == null) ? "" : duration.toString()) + "#" + ((intensity == 0) ? "" : intensity) + "#";
     }
 }

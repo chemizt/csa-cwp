@@ -9,6 +9,7 @@ import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
@@ -199,7 +200,8 @@ class ServerConnectionProcessor extends Thread
                         {
                             String courseEntryKey = courseEntry.getKey();
                             clientOutput.writeUTF("Название курса: " + container.coursesSchedule.getCourses().get(courseEntryKey).getName() + "\n");
-                            clientOutput.writeUTF("Преподаватель: " + container.coursesSchedule.getCourses().get(courseEntryKey).getHostingTutor().getName() + "\n\n");
+                            if (container.coursesSchedule.getCourses().get(courseEntryKey).getHostingTutor() != null)
+                                clientOutput.writeUTF("Преподаватель: " + container.coursesSchedule.getCourses().get(courseEntryKey).getHostingTutor().getName() + "\n\n");
                         }
                         break;
                     }
@@ -352,8 +354,14 @@ class ServerConnectionProcessor extends Thread
                         tutorName = clientInput.readUTF();
                         if (container.coursesSchedule.getTutors().get(tutorName) != null)
                         {
-                            clientOutput.writeUTF("\nПреподаватель " + tutorName + " найден! Вот полная информация о нём:\n");
-                            clientOutput.writeUTF(container.coursesSchedule.getTutors().get(tutorName).returnFullInfo());
+                            String newInfo = clientInput.readUTF();
+                            container.coursesSchedule.getTutors().get(tutorName).parseString(newInfo);
+                            if (!container.coursesSchedule.getTutors().get(tutorName).getName().equals(tutorName))
+                            {
+                                container.coursesSchedule.getTutors().put(container.coursesSchedule.getTutors().get(tutorName).getName(), container.coursesSchedule.getTutors().get(tutorName));
+                                container.coursesSchedule.getTutors().remove(tutorName);
+                            }
+                            clientOutput.writeUTF("Данные о преподавателе " + tutorName + " успешно обновлены");
                         }
                         else
                         {
@@ -363,30 +371,113 @@ class ServerConnectionProcessor extends Thread
                     }
                     case "15":
                     {
+                        String studName;
+                        studName = clientInput.readUTF();
+                        if (container.coursesSchedule.getStudents().get(studName) != null)
+                        {
+                            String newInfo = clientInput.readUTF();
+                            container.coursesSchedule.getStudents().get(studName).parseString(newInfo);
+                            if (!container.coursesSchedule.getStudents().get(studName).getName().equals(studName))
+                            {
+                                container.coursesSchedule.getStudents().put(container.coursesSchedule.getStudents().get(studName).getName(), container.coursesSchedule.getStudents().get(studName));
+                                container.coursesSchedule.getStudents().remove(studName);
+                            }
+                            clientOutput.writeUTF("Данные о студенте " + studName + " успешно обновлены");
+                        }
+                        else
+                        {
+                            clientOutput.writeUTF("Студента с таким именем не существует, имя введено с ошибкой, или не соответствует формату");
+                        }
                         break;
                     }
                     case "16":
                     {
+                        String courseName;
+                        courseName = clientInput.readUTF();
+                        if (container.coursesSchedule.getCourses().get(courseName) != null)
+                        {
+                            String newInfo = clientInput.readUTF();
+                            container.coursesSchedule.getCourses().get(courseName).parseString(newInfo);
+                            if (!container.coursesSchedule.getCourses().get(courseName).getName().equals(courseName))
+                            {
+                                container.coursesSchedule.getCourses().put(container.coursesSchedule.getCourses().get(courseName).getName(), container.coursesSchedule.getCourses().get(courseName));
+                                container.coursesSchedule.getCourses().remove(courseName);
+                            }
+                            clientOutput.writeUTF("Данные о курсе " + courseName + " успешно обновлены");
+                        }
+                        else
+                        {
+                            clientOutput.writeUTF("Курса с таким названием не существует, имя введено с ошибкой, или не соответствует формату");
+                        }
                         break;
                     }
                     case "17":
                     {
+                        String companyName;
+                        companyName = clientInput.readUTF();
+                        if (container.coursesSchedule.getCompanies().get(companyName) != null)
+                        {
+                            String newInfo = clientInput.readUTF();
+                            container.coursesSchedule.getCompanies().get(companyName).parseString(newInfo);
+                            if (!container.coursesSchedule.getCompanies().get(companyName).getName().equals(companyName))
+                            {
+                                container.coursesSchedule.getCompanies().put(container.coursesSchedule.getCompanies().get(companyName).getName(), container.coursesSchedule.getCompanies().get(companyName));
+                                container.coursesSchedule.getCompanies().remove(companyName);
+                            }
+                            clientOutput.writeUTF("Данные о компании " + companyName + " успешно обновлены");
+                        }
+                        else
+                        {
+                            clientOutput.writeUTF("Компании с таким названием не существует, имя введено с ошибкой, или не соответствует формату");
+                        }
                         break;
                     }
                     case "18":
                     {
+                        String tutorName;
+                        tutorName = clientInput.readUTF();
+                        String newInfo = clientInput.readUTF();
+                        Tutor newTutor = new Tutor();
+                        newTutor.setContainer(container.coursesSchedule);
+                        newTutor.parseString(newInfo);
+                        container.coursesSchedule.getTutors().put(newTutor.getName(), newTutor);
+                        clientOutput.writeUTF("Преподаватель " + tutorName + " успешно добавлен");
                         break;
                     }
                     case "19":
                     {
+                        String studName;
+                        studName = clientInput.readUTF();
+                        String newInfo = clientInput.readUTF();
+                        Student newStudent = new Student();
+                        newStudent.setContainer(container.coursesSchedule);
+                        newStudent.parseString(newInfo);
+                        container.coursesSchedule.getStudents().put(newStudent.getName(), newStudent);
+                        clientOutput.writeUTF("Студент " + studName + " успешно добавлен");
                         break;
                     }
                     case "20":
                     {
+                        String courseName;
+                        courseName = clientInput.readUTF();
+                        String newInfo = clientInput.readUTF();
+                        Course newCourse = new Course();
+                        newCourse.parseString(newInfo);
+                        container.coursesSchedule.getCourses().put(newCourse.getName(), newCourse);
+                        clientOutput.writeUTF("Курс " + courseName + " успешно добавлен");
                         break;
                     }
                     case "21":
                     {
+                        String companyName;
+                        companyName = clientInput.readUTF();
+                        String newInfo = clientInput.readUTF();
+                        Company newCompany = new Company();
+                        newCompany.setContainer(container.coursesSchedule);
+
+                        newCompany.parseString(newInfo);
+                        container.coursesSchedule.getCompanies().put(newCompany.getName(), newCompany);
+                        clientOutput.writeUTF("Компания " + companyName + " успешно добавлена");
                         break;
                     }
                     case "22":
@@ -404,7 +495,6 @@ class ServerConnectionProcessor extends Thread
                 }
             }
             while (!decision.toUpperCase(Locale.getDefault()).equals("X-IT"));
-            clientOutput.writeUTF("terminate");
             clientOutput.close(); clientInput.close();
             System.out.println(getTimestamp() + " Клиент с адресом " + clientSocket.getInetAddress().toString().replace("/", "") + " отключился. ");
             clientSocket.close();
@@ -417,7 +507,8 @@ class ServerConnectionProcessor extends Thread
     }
     public String getTimestamp()
     {
-        return LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + ":" + LocalDateTime.now().getSecond();
+        LocalDateTime currentTime = LocalDateTime.now();
+        return currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
     }
 }
 

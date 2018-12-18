@@ -6,6 +6,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.Inet4Address;
 import java.text.ParseException;
+import java.time.Period;
 import java.util.StringTokenizer;
 
 public class clientGUI
@@ -51,22 +52,22 @@ public class clientGUI
         tutorsByCourses.setText("<html><center>Получить список<br />преподавателей по курсам</center></html>");
         tutorsByCompanies.setText("<html><center>Получить список<br />преподавателей по компаниям</center></html>");
         mainFrame.addWindowListener(new WindowAdapter()
-                                    {
-                                        @Override
-                                        public void windowClosing(WindowEvent windowEvent)
-                                        {
-                                            if (clientBackend != null) clientBackend.terminateServerConnection();
-                                            try
-                                            {
-                                                Thread.sleep(125);
-                                            }
-                                            catch (InterruptedException e)
-                                            {
-                                                e.printStackTrace();
-                                            }
-                                            System.exit(0);
-                                        }
-                                    });
+        {
+            @Override
+            public void windowClosing(WindowEvent windowEvent)
+            {
+                if (clientBackend != null) clientBackend.terminateServerConnection();
+                try
+                {
+                    Thread.sleep(125);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                System.exit(0);
+            }
+        });
         connectButton.addActionListener(e ->
         {
             Object offender = null;
@@ -135,7 +136,8 @@ public class clientGUI
                                 if (response.contains(errorSubMessage))
                                 {
                                     JOptionPane.showMessageDialog(mainPanel, response);
-                                } else serverOutput.append(response);
+                                }
+                                else serverOutput.append(response);
                             }
                             break;
                         }
@@ -157,7 +159,8 @@ public class clientGUI
                                 if (response.contains(errorSubMessage))
                                 {
                                     JOptionPane.showMessageDialog(mainPanel, response);
-                                } else serverOutput.append(response);
+                                }
+                                else serverOutput.append(response);
                             }
                             break;
                         }
@@ -179,7 +182,8 @@ public class clientGUI
                                 if (response.contains(errorSubMessage))
                                 {
                                     JOptionPane.showMessageDialog(mainPanel, response);
-                                } else serverOutput.append(response);
+                                }
+                                else serverOutput.append(response);
                             }
                             break;
                         }
@@ -201,13 +205,398 @@ public class clientGUI
                                 if (response.contains(errorSubMessage))
                                 {
                                     JOptionPane.showMessageDialog(mainPanel, response);
-                                } else serverOutput.append(response);
+                                }
+                                else serverOutput.append(response);
                             }
                             break;
                         }
                     }
-
                 }
+                else if (modifyRadioButton.isSelected())
+                {
+                    switch (thirdBtnCBox.getSelectedIndex())
+                    {
+                        case 0:
+                        {
+                            String tutorName = JOptionPane.showInputDialog(mainFrame, "Введите имя преподавателя в формате 'Фамилия И. О.'");
+                            if (tutorName != null)
+                            {
+                                clientBackend.requestModifyInfo(tutorName, "14");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String response = clientBackend.processServerOutput();
+                                if (response.contains(errorSubMessage))
+                                {
+                                    JOptionPane.showMessageDialog(mainPanel, response);
+                                }
+                                else
+                                {
+                                    String newInfo, reply;
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите новое имя преподавателя в формате 'Фамилия И. О.' (нажмите 'Отмена', если не хотите его менять)");
+                                    newInfo = reply != null ? reply + "#" : "#";
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите название нового работодателя преподавателя (нажмите 'Отмена', если не хотите его менять)");
+                                    newInfo += reply != null ? reply + "#" : "#";
+                                    do
+                                    {
+                                        reply = JOptionPane.showInputDialog(mainFrame, "Введите курс, ведомый преподавателем (нажмите 'Отмена' для завершения ввода)");
+                                        newInfo += reply != null ? reply + "*" : "*";
+                                    }
+                                    while (reply != null);
+                                    newInfo += "#";
+                                    clientBackend.writeInfo(newInfo);
+                                    try
+                                    {
+                                        Thread.sleep(125);
+                                    }
+                                    catch (InterruptedException e1)
+                                    {
+                                        e1.printStackTrace();
+                                    }
+                                    JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+                                }
+                            }
+                            break;
+                        }
+                        case 1:
+                        {
+                            String studName = JOptionPane.showInputDialog(mainFrame, "Введите имя студента в формате 'Фамилия И. О.'");
+                            if (studName != null)
+                            {
+                                clientBackend.requestModifyInfo(studName, "15");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String response = clientBackend.processServerOutput();
+                                if (response.contains(errorSubMessage))
+                                {
+                                    JOptionPane.showMessageDialog(mainPanel, response);
+                                }
+                                else
+                                {
+                                    String newInfo, reply;
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите новое имя студента в формате 'Фамилия И. О.' (нажмите 'Отмена', если не хотите его менять)");
+                                    newInfo = reply != null ? reply + "#" : "#";
+                                    do
+                                    {
+                                        reply = JOptionPane.showInputDialog(mainFrame, "Введите курс, прослушиваемый студентом (нажмите 'Отмена' для завершения ввода)");
+                                        newInfo += reply != null ? reply + "*" : "*";
+                                    }
+                                    while (reply != null);
+                                    newInfo += "#";
+                                    clientBackend.writeInfo(newInfo);
+                                    try
+                                    {
+                                        Thread.sleep(125);
+                                    }
+                                    catch (InterruptedException e1)
+                                    {
+                                        e1.printStackTrace();
+                                    }
+                                    JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+                                }
+                            }
+                            break;
+                        }
+                        case 2:
+                        {
+                            String courseName = JOptionPane.showInputDialog(mainFrame, "Введите название курса");
+                            if (courseName != null)
+                            {
+                                clientBackend.requestModifyInfo(courseName, "16");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String response = clientBackend.processServerOutput();
+                                if (response.contains(errorSubMessage))
+                                {
+                                    JOptionPane.showMessageDialog(mainPanel, response);
+                                }
+                                else
+                                {
+                                    String newInfo, reply;
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите новое название курса (нажмите 'Отмена', если не хотите его менять)");
+                                    newInfo = reply != null ? reply + "#" : "#";
+                                    boolean weeksParsedSuccessfully = false;
+                                    while (!weeksParsedSuccessfully)
+                                    {
+                                        try
+                                        {
+                                            reply = JOptionPane.showInputDialog(mainFrame, "Введите новую продолжительность курса в неделях (нажмите 'Отмена', если не хотите её менять)");
+                                            newInfo += reply != null ? "P" + Period.ofWeeks(Integer.parseInt(reply)).getDays() / 7 + "W#" : "#";
+                                            weeksParsedSuccessfully = true;
+                                        }
+                                        catch (Exception e1)
+                                        {
+                                            JOptionPane.showMessageDialog(mainPanel, "Количество недель должно быть числом. Попробуйте ещё раз.");
+                                        }
+                                    }
+                                    weeksParsedSuccessfully = false;
+                                    while (!weeksParsedSuccessfully)
+                                    {
+                                        try
+                                        {
+                                            reply = JOptionPane.showInputDialog(mainFrame, "Введите новую интенсивность курса в часах (нажмите 'Отмена', если не хотите её менять)");
+                                            newInfo += reply != null ? Integer.parseInt(reply) + "#" : "#";
+                                            weeksParsedSuccessfully = true;
+                                        }
+                                        catch (Exception e1)
+                                        {
+                                            JOptionPane.showMessageDialog(mainPanel, "Интенсивность должна быть числом. Попробуйте ещё раз.");
+                                        }
+                                    }
+                                    clientBackend.writeInfo(newInfo);
+                                    try
+                                    {
+                                        Thread.sleep(125);
+                                    }
+                                    catch (InterruptedException e1)
+                                    {
+                                        e1.printStackTrace();
+                                    }
+                                    JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+                                }
+                            }
+                            break;
+                        }
+                        case 3:
+                        {
+                            String companyName = JOptionPane.showInputDialog(mainFrame, "Введите название компании");
+                            if (companyName != null)
+                            {
+                                clientBackend.requestModifyInfo(companyName, "17");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String response = clientBackend.processServerOutput();
+                                if (response.contains(errorSubMessage))
+                                {
+                                    JOptionPane.showMessageDialog(mainPanel, response);
+                                }
+                                else
+                                {
+                                    String newInfo, reply;
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите новое название компании (нажмите 'Отмена', если не хотите его менять)");
+                                    newInfo = reply != null ? reply + "#" : "#";
+                                    do
+                                    {
+                                        reply = JOptionPane.showInputDialog(mainFrame, "Введите курс, проводимый компанией (нажмите 'Отмена' для завершения ввода)");
+                                        newInfo += reply != null ? reply + "*" : "*";
+                                    }
+                                    while (reply != null);
+                                    newInfo += "#";
+                                    clientBackend.writeInfo(newInfo);
+                                    try
+                                    {
+                                        Thread.sleep(125);
+                                    }
+                                    catch (InterruptedException e1)
+                                    {
+                                        e1.printStackTrace();
+                                    }
+                                    JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if (addRadioButton.isSelected())
+                {
+                    switch (fourthBtnCBox.getSelectedIndex())
+                    {
+                        case 0:
+                        {
+                            String tutorName = JOptionPane.showInputDialog(mainFrame, "Введите имя нового преподавателя в формате 'Фамилия И. О.'");
+                            if (tutorName != null)
+                            {
+                                clientBackend.requestModifyInfo(tutorName, "18");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String newInfo, reply;
+                                newInfo = tutorName + "#";
+                                reply = JOptionPane.showInputDialog(mainFrame, "Введите название работодателя преподавателя");
+                                newInfo += reply != null ? reply + "#" : "#";
+                                do
+                                {
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите курс, ведомый преподавателем (нажмите 'Отмена' для завершения ввода)");
+                                    newInfo += reply != null ? reply + "*" : "*";
+                                }
+                                while (reply != null);
+                                newInfo += "#";
+                                clientBackend.writeInfo(newInfo);
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+
+                            }
+                            break;
+                        }
+                        case 1:
+                        {
+                            String studName = JOptionPane.showInputDialog(mainFrame, "Введите имя нового студента в формате 'Фамилия И. О.'");
+                            if (studName != null)
+                            {
+                                clientBackend.requestModifyInfo(studName, "19");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String newInfo, reply;
+                                newInfo = studName + "#";
+                                do
+                                {
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите курс, прослушиваемый студентом (нажмите 'Отмена' для завершения ввода)");
+                                    newInfo += reply != null ? reply + "*" : "*";
+                                }
+                                while (reply != null);
+                                newInfo += "#";
+                                clientBackend.writeInfo(newInfo);
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+
+                            }
+                            break;
+                        }
+                        case 2:
+                        {
+                            String courseName = JOptionPane.showInputDialog(mainFrame, "Введите название нового курса");
+                            if (courseName != null)
+                            {
+                                clientBackend.requestModifyInfo(courseName, "20");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String newInfo = courseName + "#", reply;
+                                boolean weeksParsedSuccessfully = false;
+                                while (!weeksParsedSuccessfully)
+                                {
+                                    try
+                                    {
+                                        reply = JOptionPane.showInputDialog(mainFrame, "Введите продолжительность курса в неделях");
+                                        newInfo += reply != null ? "P" + Period.ofWeeks(Integer.parseInt(reply)).getDays() / 7 + "W#" : "#";
+                                        weeksParsedSuccessfully = true;
+                                    }
+                                    catch (Exception e1)
+                                    {
+                                        JOptionPane.showMessageDialog(mainPanel, "Количество недель должно быть числом. Попробуйте ещё раз.");
+                                    }
+                                }
+                                weeksParsedSuccessfully = false;
+                                while (!weeksParsedSuccessfully)
+                                {
+                                    try
+                                    {
+                                        reply = JOptionPane.showInputDialog(mainFrame, "Введите интенсивность курса в часах");
+                                        newInfo += reply != null ? Integer.parseInt(reply) + "#" : "#";
+                                        weeksParsedSuccessfully = true;
+                                    }
+                                    catch (Exception e1)
+                                    {
+                                        JOptionPane.showMessageDialog(mainPanel, "Интенсивность должна быть числом. Попробуйте ещё раз.");
+                                    }
+                                }
+                                newInfo += "#";
+                                clientBackend.writeInfo(newInfo);
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+
+                            }
+                            break;
+                        }
+                        case 3:
+                        {
+                            String companyName = JOptionPane.showInputDialog(mainFrame, "Введите название новой компании");
+                            if (companyName != null)
+                            {
+                                clientBackend.requestModifyInfo(companyName, "21");
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                String newInfo = companyName + "#", reply;
+                                do
+                                {
+                                    reply = JOptionPane.showInputDialog(mainFrame, "Введите курс, проводимый компанией (нажмите 'Отмена' для завершения ввода)");
+                                    newInfo += reply != null ? reply + "*" : "*";
+                                }
+                                while (reply != null);
+                                newInfo += "#";
+                                clientBackend.writeInfo(newInfo);
+                                try
+                                {
+                                    Thread.sleep(125);
+                                }
+                                catch (InterruptedException e1)
+                                {
+                                    e1.printStackTrace();
+                                }
+                                JOptionPane.showMessageDialog(mainPanel, clientBackend.processServerOutput());
+                            }
+                            break;
+                        }
+                    }
+                }
+
             }
         });
         studentsByCourses.addActionListener(e ->
@@ -246,7 +635,8 @@ public class clientGUI
                     if (response.contains(errorSubMessage))
                     {
                         JOptionPane.showMessageDialog(mainPanel, response);
-                    } else serverOutput.append(response);
+                    }
+                    else serverOutput.append(response);
                 }
             }
         });
@@ -287,7 +677,8 @@ public class clientGUI
     private boolean connOnline()
     {
         boolean connStatus = clientBackend != null && !clientBackend.clientSocket.isClosed();
-        if (!connStatus) JOptionPane.showMessageDialog(mainPanel, "В данный момент Вы не подключены ни к какому серверу");
+        if (!connStatus)
+            JOptionPane.showMessageDialog(mainPanel, "В данный момент Вы не подключены ни к какому серверу");
         return connStatus;
     }
     class IPAddressFormatter extends DefaultFormatter //copy-pasted from http://www.java2s.com/Tutorials/Java/Swing/JFormattedText/Use_JFormattedTextField_to_accept_IP_address_only_in_Java.htm

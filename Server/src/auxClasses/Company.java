@@ -54,13 +54,23 @@ public class Company
     {
         this.employedTutors = employedTutors;
     }
-    public void parseCompanyInfoString(String strToParse)
+    public void parseString(String strToParse)
     {
-        name = returnSubString(strToParse, "#");
+        name = returnSubString(strToParse, "#").equals("") ? name : returnSubString(strToParse, "#");
         strToParse = purgeString(strToParse, "#");
-        while (!returnSubString(strToParse, "#").equals(""))
+        while (!returnSubString(strToParse, "*").equals(""))
         {
-            hostedCourses.put(returnSubString(strToParse, "*"), container.getCourses().get(returnSubString(strToParse, "*")));
+            if (container.getCourses().get(returnSubString(strToParse, "*")) == null)
+            {
+                Course newCourse = new Course();
+                newCourse.setName(returnSubString(strToParse, "*"));
+                container.getCourses().put(newCourse.getName(), newCourse);
+                hostedCourses.put(newCourse.getName(), newCourse);
+            }
+            else
+            {
+                hostedCourses.put(returnSubString(strToParse, "*"), container.getCourses().get(returnSubString(strToParse, "*")));
+            }
             strToParse = purgeString(strToParse, "*");
         }
     }
@@ -68,8 +78,8 @@ public class Company
     {
         String result;
         result = "Название: " + name;
-        result += "\nРасположение: " + location.returnFull();
-        result += "\nПроводимые курсы:\n|";
+        result += (location == null ? "" : "\nРасположение: " + location.returnFull());
+        result += hostedCourses.size() <= 0 ? "" : "\nПроводимые курсы:\n|";
         int i = 0;
         for (Map.Entry<String, Course> courseEntry : hostedCourses.entrySet())
         {
@@ -78,7 +88,7 @@ public class Company
             i++;
             if (i % 4 == 0) result += "\n|";
         }
-        result += "\nШтат преподавателей:\n|";
+        result += employedTutors.size() <= 0 ? "" : "\nШтат преподавателей:\n|";
         i = 0;
         for (Map.Entry<String, Tutor> tutorEntry : employedTutors.entrySet())
         {
@@ -92,7 +102,7 @@ public class Company
     }
     public String returnWritableAddress()
     {
-        return name + "#" + location.returnWritableFull();
+        return name + "#" + (location == null ? "" : location.returnWritableFull());
     }
     public String returnWritableFull()
     {

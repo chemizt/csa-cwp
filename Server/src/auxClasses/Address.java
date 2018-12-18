@@ -68,25 +68,47 @@ public class Address
     {
         String companyName = returnSubString(strToParse, "#");
         strToParse = purgeString(strToParse, "#");
-        postIndex = Integer.parseInt(returnSubString(strToParse, "#"));
-        strToParse = purgeString(strToParse, "#");
-        country = returnSubString(strToParse, "#");
-        strToParse = purgeString(strToParse, "#");
-        city = returnSubString(strToParse, "#");
-        strToParse = purgeString(strToParse, "#");
-        street = returnSubString(strToParse, "#");
-        strToParse = purgeString(strToParse, "#");
-        building = returnSubString(strToParse, "#");
-        strToParse = purgeString(strToParse, "#");
-        floor = returnSubString(strToParse, "#");
+        if (!returnSubString(strToParse, "#").equals(""))
+        {
+            postIndex = Integer.parseInt(returnSubString(strToParse, "#"));
+            strToParse = purgeString(strToParse, "#");
+        }
+
+        if (!returnSubString(strToParse, "#").equals(""))
+        {
+            country = returnSubString(strToParse, "#");
+            strToParse = purgeString(strToParse, "#");
+        }
+        if (!returnSubString(strToParse, "#").equals(""))
+        {
+            city = returnSubString(strToParse, "#");
+            strToParse = purgeString(strToParse, "#");
+        }
+        if (!returnSubString(strToParse, "#").equals(""))
+        {
+            street = returnSubString(strToParse, "#");
+            strToParse = purgeString(strToParse, "#");
+        }
+        if (!returnSubString(strToParse, "#").equals(""))
+        {
+            building = returnSubString(strToParse, "#");
+            strToParse = purgeString(strToParse, "#");
+        }
+        if (!returnSubString(strToParse, "#").equals(""))
+        {
+            floor = returnSubString(strToParse, "#");
+        }
         container.getCompanies().get(companyName).setLocation(this);
     }
     public String returnFull()
     {
-        return postIndex + " " + country + ", г. " + city + ", ул. " + street + ", д. " + building + ", эт. " + floor;
+        return (postIndex == 0 ? "" : postIndex) + (country == null ? "" : " " + country + ", ") +
+                (city == null ? "" : "г. " + city + ", ") + (street == null ? "" : "ул. " + street + ", ") +
+                (building == null ? "" : "д. " + building + ", ") + (floor == null ? "" : "эт. " + floor);
     }
     public String returnWritableFull()
     {
-        return postIndex + "#" + country + "#" + city + "#" + street + "#" + building + "#" + floor + "#";
+        return (postIndex == 0 ? "" : postIndex) + "#" + (country == null ? "" : country) + "#" + (city == null ? "" : city) + "#"
+                + (street == null ? "" : street) + "#" + (building == null ? "" : building) + "#" + (floor == null ? "" : floor) + "#";
     }
 }

@@ -107,6 +107,34 @@ public class Client
             e.printStackTrace();
         }
     }
+    public void requestModifyInfo(String name, String operationID)
+    {
+        try
+        {
+            srvInput.writeUTF(operationID);
+            Thread.sleep(125);
+            srvInput.writeUTF(name);
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    public void writeInfo(String info)
+    {
+        try
+        {
+            srvInput.writeUTF(info);
+        }
+        catch (IOException connException)
+        {
+            System.out.println("Проблема при попытке установления соединения с сервером. Перезапустите клиент и попробуйте ещё раз.");
+        }
+    }
     public String processServerOutput()
     {
         String response = "";
@@ -141,27 +169,3 @@ public class Client
     }
 }
 
-class ServerOutputProcessor extends Thread
-{
-    public DataInputStream srvOutput;
-    public String response;
-    public ServerOutputProcessor(DataInputStream o)
-    {
-        srvOutput = o;
-        response = "";
-    }
-    public void run()
-    {
-        try
-        {
-            while (srvOutput.available() > 0)
-            {
-                response = response.concat(srvOutput.readUTF());
-            }
-        }
-        catch (IOException exception)
-        {
-            System.out.println("Ошибка при выводе сообщения от сервера");
-        }
-    }
-}
